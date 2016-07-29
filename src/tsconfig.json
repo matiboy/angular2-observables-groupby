@@ -18,6 +18,10 @@
 
   "files": [
     "main.ts",
-    "typings.d.ts"
+    "typings.d.ts",
+    "app/app.component.ts",
+    "app/app.component.spec.ts",
+    "app/mock-chat.service.spec.ts",
+    "app/mock-chat.service.ts"
   ]
 }

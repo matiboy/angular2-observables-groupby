@@ -36,6 +36,7 @@ const barrels: string[] = [
   // App specific barrels.
   'app',
   'app/shared',
+  'app/player',
   /** @cli-barrel */
 ];
 
@@ -43,6 +44,7 @@ const cliSystemConfigPackages: any = {};
 barrels.forEach((barrelName: string) => {
   cliSystemConfigPackages[barrelName] = { main: 'index' };
 });
+cliSystemConfigPackages.lodash = {main: 'lodash'};
 
 /** Type declaration for ambient System. */
 declare var System: any;
@@ -52,6 +54,7 @@ System.config({
   map: {
     '@angular': 'vendor/@angular',
     'rxjs': 'vendor/rxjs',
+    'lodash': 'vendor/lodash',
     'main': 'main.js'
   },
   packages: cliSystemConfigPackages
