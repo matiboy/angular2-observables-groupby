@@ -1,0 +1,14 @@
+<div container>
+  <h1>
+    Current standings
+  </h1>
+  <table class="table--borderHorizontal table--fillEven">
+    <thead>
+      <th>Name</th>
+      <th>Best</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of (players$ | async)" [player]="player"></tr>
+    </tbody>
+  </table>
+</div>
