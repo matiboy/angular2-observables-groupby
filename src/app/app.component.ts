@@ -17,5 +17,17 @@ export class AppComponent {
   players$: Observable<PlayerInterface[]>;
   newPlayerHighScore$ = new Subject<void>();  
   constructor(scoreService:MockScoreService) {
+    let playerScores$ = scoreService.socketMessage$.groupBy(m => m.who, m => m.score);
+    this.players$ = playerScores$.map(player => {
+      let score$ = new BehaviorSubject(0);
+      player
+        .scan((best, latest) => Math.max(best, latest), 0)
+        .subscribe(score$);
+      return {
+        name: player.key,
+        score$: score$
+      };
+    }).scan((ov, player) => [...ov, player], []);
+
   }
 }
