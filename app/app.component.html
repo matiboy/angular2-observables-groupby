@@ -2,13 +2,22 @@
   <h1>
     Current standings
   </h1>
-  <table class="table--borderHorizontal table--fillEven">
-    <thead>
-      <th>Name</th>
-      <th>Best</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let player of (players$ | async)" [player]="player"></tr>
-    </tbody>
-  </table>
+  <div row>
+    <div column="4">
+      <table class="table--borderHorizontal table--fillEven">
+        <thead>
+          <th>Name</th>
+          <th>Best</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of (players$ | async)" [player]="player"></tr>
+        </tbody>
+      </table>
+    </div>
+    <div column="8">
+      <h2>Using Observables's "groupBy"</h2>
+      <p>A service fakes a socket that sends data at a random interval of 1-3 seconds and pretends to have received a user's score to an imaginary game</p>
+      <p>The data is passed through groupBy to achieve the "standings" table on the LHS.</p>
+      <p>This also makes use of scan, distinctUntilChanged (with and without compare method), Subjects and BehaviorSubjects</p>
+    </div>    
 </div>
