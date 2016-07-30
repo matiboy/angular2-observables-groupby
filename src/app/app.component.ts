@@ -33,6 +33,10 @@ export class AppComponent {
     })
     .scan((ov, player) => [...ov, player], [])
     .subscribe(players$);
-    this.players$ = this.newPlayerHighScore$.map(_ => lodash.sortBy(players$.getValue(), player => -1 * player.score$.getValue()));
+    this.players$ = this.newPlayerHighScore$
+      .map(_ => lodash.sortBy(players$.getValue(), player => -1 * player.score$.getValue()))
+      .do(x => console.log('Do we need to reorder?', lodash.map(x, 'name')))
+      .distinctUntilChanged((ov, nv) => lodash.isEqual(lodash.map(ov, 'name'), lodash.map(nv, 'name')))
+      .do(x => console.log('Reordering needed'));      
   }
 }

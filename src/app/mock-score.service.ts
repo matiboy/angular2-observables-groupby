@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as lodash from 'lodash';
 import {Subject} from 'rxjs/Rx';
 
-const people = ['Audry', 'Jose', 'Pete', 'Louis', 'Elena', 'Eugene', 'Leisa', 'Mat']
+const people = ['Audry', 'Jose', 'Mat']
 
 export interface MessageInterface {
   who: string;
