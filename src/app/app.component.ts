@@ -21,7 +21,11 @@ export class AppComponent {
     this.players$ = playerScores$.map(player => {
       let score$ = new BehaviorSubject(0);
       player
+        .do(x => console.log('Latest', x))
         .scan((best, latest) => Math.max(best, latest), 0)
+        .do(x => console.log('Best', x))
+        .distinctUntilChanged()
+        .do(x => console.log('New personal best', x))        
         .subscribe(score$);
       return {
         name: player.key,
