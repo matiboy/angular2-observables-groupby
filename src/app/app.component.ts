@@ -18,20 +18,21 @@ export class AppComponent {
   newPlayerHighScore$ = new Subject<void>();  
   constructor(scoreService:MockScoreService) {
     let playerScores$ = scoreService.socketMessage$.groupBy(m => m.who, m => m.score);
-    this.players$ = playerScores$.map(player => {
+    let players$ = new BehaviorSubject<PlayerInterface[]>([]);
+    playerScores$.map(player => {
       let score$ = new BehaviorSubject(0);
-      player
-        .do(x => console.log('Latest', x))
+      let newHighScore$ = player
         .scan((best, latest) => Math.max(best, latest), 0)
-        .do(x => console.log('Best', x))
-        .distinctUntilChanged()
-        .do(x => console.log('New personal best', x))        
-        .subscribe(score$);
+        .distinctUntilChanged();
+      newHighScore$.subscribe(score$);
+      newHighScore$.map(_ => null).subscribe(this.newPlayerHighScore$);
       return {
         name: player.key,
         score$: score$
       };
-    }).scan((ov, player) => [...ov, player], []);
-
+    })
+    .scan((ov, player) => [...ov, player], [])
+    .subscribe(players$);
+    this.players$ = this.newPlayerHighScore$.map(_ => lodash.sortBy(players$.getValue(), player => -1 * player.score$.getValue()));
   }
 }
