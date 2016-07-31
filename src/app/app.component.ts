@@ -15,24 +15,24 @@ import * as lodash from 'lodash';
 })
 export class AppComponent {
   players$: Observable<PlayerInterface[]>;
-  newPlayerHighScore$ = new Subject<void>();  
   constructor(scoreService:MockScoreService) {
     let playerScores$ = scoreService.socketMessage$.groupBy(m => m.who, m => m.score);
     let players$ = new BehaviorSubject<PlayerInterface[]>([]);
-    playerScores$.map(player => {
+    let singlePlayers$ = playerScores$.map(player => {
       let score$ = new BehaviorSubject(0);
-      let newHighScore$ = player
-        .scan((best, latest) => Math.max(best, latest), 0)
-        .distinctUntilChanged();
-      newHighScore$.subscribe(score$);
-      newHighScore$.map(_ => null).subscribe(this.newPlayerHighScore$);
+      player.scan((best, latest) => Math.max(best, latest), 0)
+        .distinctUntilChanged()
+        .subscribe(score$);
       return {
         name: player.key,
         score$: score$
       };
-    })
-    .scan((ov, player) => [...ov, player], [])
+    });
+    singlePlayers$.scan((ov, player) => [...ov, player], [])
     .subscribe(players$);
-    this.players$ = this.newPlayerHighScore$.map(_ => lodash.sortBy(players$.getValue(), player => -1 * player.score$.getValue()));
+    this.players$ = singlePlayers$
+      .map(player => player.score$.skip(1)) // Skip first assignment (0 from BehaviourSubject)
+      .mergeAll()
+      .map(_ => lodash.sortBy(players$.getValue(), player => -1 * player.score$.getValue()));
   }
 }
